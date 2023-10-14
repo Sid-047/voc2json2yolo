@@ -45,12 +45,16 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
             a = [int(x)/xDiv for x in pnts[::2]]
             b = [int(y)/yDiv for y in pnts[1::2]]
             pnts = list(zip(a,b))
+            pntSet = set(pnts)
+            pnts = list(pntSet)
             odns = [str(float(w)) for z in pnts for w in z]
         else:
             pnts.pop()
             a = [int(x)/xDiv for x in pnts[::2]]
             b = [int(y)/yDiv for y in pnts[1::2]]
             pnts = list(zip(a,b))
+            pntSet = set(pnts)
+            pnts = list(pntSet)
             odns = [str(float(w)) for z in pnts for w in z]
 
         loadData = ' '.join([str(clsDict[clsName])] + odns)

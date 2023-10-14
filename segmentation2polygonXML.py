@@ -34,11 +34,15 @@ for f in tqdm(files, desc = "Processing Stuff!"):
             a = [x for x in pnts[::2]]
             b = [y for y in pnts[1::2]]
             pnts = list(zip(a,b))
+            pntSet = set(pnts)
+            pnts = list(pntSet)
         else:
             pnts.pop()
             a = [x for x in pnts[::2]]
             b = [y for y in pnts[1::2]]
             pnts = list(zip(a,b))
+            pntSet = set(pnts)
+            pnts = list(pntSet)
 
         segmentationElement = objectElement.find('segmentations')
         objectElement.remove(segmentationElement)
