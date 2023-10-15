@@ -22,18 +22,26 @@ clsList.sort()
 print(clsList)
 clsNum = [x for x in range(0, len(clsList))]
 clsDict = dict(zip(clsList, clsNum))
+nameDict = dict(zip(clsNum, clsList))
 f = open("numClasses.txt", 'w')
 f.write(str(clsDict))
 f.close()
 
-yamlDict = dict(
+yamlSegmentDict = dict(
     train = "../train/images",
     val = "../valid/images",
-    test = "../test/images",
-    nc = len(clsDict.keys()),
+    nc = len(clsNum)
     names = str(clsList)
 )
+f = open("segmentationData.yaml", 'w')
+yaml.dump(yamlSegmentDict, f, default_flow_style=False)
+f.close()
 
-f = open("data.yaml", 'w')
-yaml.dump(yamlDict, f, default_flow_style=False)
+yamlDetectionDict = dict(
+    train = "../train/images",
+    val = "../valid/images",
+    names = nameDict
+)
+f = open("detectiondata.yaml", 'w')
+yaml.dump(yamlDetectionDict, f, default_flow_style=False)
 f.close()
