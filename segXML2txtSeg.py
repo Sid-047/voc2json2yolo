@@ -63,5 +63,3 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
     f_ = open(outFile, 'w')
     f_.write(txtData)
     f_.close()
-        
-        
