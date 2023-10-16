@@ -5,7 +5,7 @@ from tqdm import tqdm
 import yaml
 import glob
 
-print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-Content Directory"+Fore.RESET)
+print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-XML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
 
 clsSet = set()
@@ -13,7 +13,6 @@ files = glob.glob(inDir+"/*.xml")
 for f in tqdm(files, desc = "Fetching Class Names Yo!"):
     tree = ET.parse(f)
     root = tree.getroot()
-
     for i in root.iter('name'):
         clsSet.add(i.text)
 
@@ -30,7 +29,7 @@ f.close()
 yamlSegmentDict = dict(
     train = "../train/images",
     val = "../valid/images",
-    nc = len(clsNum)
+    nc = len(clsNum),
     names = str(clsList)
 )
 f = open("segmentationData.yaml", 'w')

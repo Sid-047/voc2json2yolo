@@ -4,11 +4,11 @@ from tkinter import filedialog
 from tqdm import tqdm
 import glob
 
-print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-Content Directory"+Fore.RESET)
+print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-segmentXML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
 print(Fore.BLUE+Style.BRIGHT+"\n\nSelect the numClasses Text File Yo!"+Fore.RESET)
 inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
-print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut Directory"+Fore.RESET)
+print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut TXT Directory"+Fore.RESET)
 outDir = filedialog.askdirectory() + '\\'
 
 f = open(inTxt, 'r')

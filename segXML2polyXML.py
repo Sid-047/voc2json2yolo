@@ -4,9 +4,9 @@ from tkinter import filedialog
 from tqdm import tqdm
 import glob
 
-print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-Content Directory"+Fore.RESET)
+print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-segXML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
-print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut Directory"+Fore.RESET)
+print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut polyXML Directory"+Fore.RESET)
 outDir = filedialog.askdirectory() + '\\'
 
 files = glob.glob(inDir+"/*.xml")
