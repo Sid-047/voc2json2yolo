@@ -4,9 +4,12 @@ from tkinter import filedialog
 from tqdm import tqdm
 import yaml
 import glob
+import os
 
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-XML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
+if not os.path.isdir("dataYAMLnTXT"):
+   os.makedirs("dataYAMLnTXT")
 
 clsSet = set()
 files = glob.glob(inDir+"/*.xml")
@@ -22,7 +25,7 @@ print(clsList)
 clsNum = [x for x in range(0, len(clsList))]
 clsDict = dict(zip(clsList, clsNum))
 nameDict = dict(zip(clsNum, clsList))
-f = open("numClasses.txt", 'w')
+f = open("dataYAMLnTXT/numClasses.txt", 'w')
 f.write(str(clsDict))
 f.close()
 
@@ -32,7 +35,7 @@ yamlSegmentDict = dict(
     nc = len(clsNum),
     names = str(clsList)
 )
-f = open("segmentationData.yaml", 'w')
+f = open("dataYAMLnTXT/segmentationData.yaml", 'w')
 yaml.dump(yamlSegmentDict, f, default_flow_style=False)
 f.close()
 
@@ -41,6 +44,6 @@ yamlDetectionDict = dict(
     val = "../valid/images",
     names = nameDict
 )
-f = open("detectiondata.yaml", 'w')
+f = open("dataYAMLnTXT/detectionData.yaml", 'w')
 yaml.dump(yamlDetectionDict, f, default_flow_style=False)
 f.close()
