@@ -1,3 +1,6 @@
+train: ../train/images
+val: ../valid/images
+
 names:
   0: 126e1a79-04b1-4bfb-ab14-1e75a55cb8d2
   1: 137e23e1-3ad5-4438-85f4-07f9cef53015
@@ -128,5 +131,3 @@ names:
   126: u92374_hr
   127: u973129_hr
   128: u973130_hr
-train: ../train/images
-val: ../valid/images
