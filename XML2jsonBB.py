@@ -26,9 +26,12 @@ for f in tqdm(files, desc = "Fetching Class Names Yo!"):
 clsList = list(clsSet)
 fileList = list(fileSet)
 clsList.sort()
+fileList.sort()
 
 catList = []
 imgList = []
+clsDict = {}
+fileDict = {}
 
 for i in range(0, len(clsList)-1):
     dataDict = {}
@@ -36,6 +39,7 @@ for i in range(0, len(clsList)-1):
     dataDict["name"] = clsList[i]
     dataDict["supercategory"] = "none"
     catList.append(dataDict)
+    clsDict[clsList[i]] = i
     dataDict = {}
 
 pprint.pprint(catList)
@@ -47,6 +51,7 @@ for j in range(0, len(fileList)-1):
     dataDict["file_name"] = dataList[0]
     dataDict["width"] = dataList[1]
     dataDict["height"] = dataList[2]
+    fileDict[dataList[0]] = j
     imgList.append(dataDict)
     dataDict = {}
 
