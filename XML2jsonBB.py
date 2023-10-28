@@ -10,6 +10,7 @@ inDir = filedialog.askdirectory()
 
 clsSet = set()
 fileSet = set()
+annotationSet = set()
 files = glob.glob(inDir+"/*.xml")
 for f in tqdm(files, desc = "Fetching Class Names Yo!"):
     tree = ET.parse(f)
@@ -18,10 +19,16 @@ for f in tqdm(files, desc = "Fetching Class Names Yo!"):
     sizeElement = root.find('size')
     widthElement = sizeElement.find('width')
     heightElement = sizeElement.find('height')
-    fileList = [fileElement.text, int(widthElement.text), int(heightElement.text)]
-    fileSet.add(str((fileList)))
+    infoList = [fileElement.text, int(widthElement.text), int(heightElement.text)]
+    fileSet.add(str((infoList)))
     for i in root.iter('name'):
         clsSet.add(i.text)
+    objectElements = root.findall('object')
+    for objectElement in objectElements:
+        nameElement = objectElement.find('name')
+        bbDataElement = objectElement.find('bndbox')
+        bbList = [int(bbDataElement.find('xmin').text), int(bbDataElement.find('ymin').text), int(bbDataElement.find('xmax').text), int(bbDataElement.find('ymax').text)]
+        subList = [fileElement.text, nameElement.text, bbList]
 
 clsList = list(clsSet)
 fileList = list(fileSet)
