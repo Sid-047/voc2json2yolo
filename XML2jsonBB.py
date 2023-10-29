@@ -28,17 +28,24 @@ for f in tqdm(files, desc = "Fetching Class Names Yo!"):
         nameElement = objectElement.find('name')
         bbDataElement = objectElement.find('bndbox')
         bbList = [int(bbDataElement.find('xmin').text), int(bbDataElement.find('ymin').text), int(bbDataElement.find('xmax').text), int(bbDataElement.find('ymax').text)]
-        subList = [fileElement.text, nameElement.text, bbList]
-
+        bbLength = bbList[2] - bbList[0]
+        bbWidth = bbList[3] - bbList[1]
+        bbArea = bbLength * bbWidth
+        subList = [fileElement.text, nameElement.text, bbList, bbArea]
+        annotationSet.add(str(subList))
 clsList = list(clsSet)
 fileList = list(fileSet)
+annotationList = list(annotationSet)
 clsList.sort()
 fileList.sort()
+annotationList.sort()
 
 catList = []
 imgList = []
+annoList = []
 clsDict = {}
 fileDict = {}
+annoDict = {}
 
 for i in range(0, len(clsList)-1):
     dataDict = {}
@@ -63,3 +70,14 @@ for j in range(0, len(fileList)-1):
     dataDict = {}
 
 pprint.pprint(imgList)
+
+for k in range(0, len(annotationList)-1):
+    dataDict = {}
+    dataList = eval(annotationList[k])
+    dataDict["id"] = clsDict[dataList[0]]
+    dataDict["image_id"] = fileDict[dataList[0]]
+    dataDict["width"] = dataList[1]
+    dataDict["height"] = dataList[2]
+    fileDict[dataList[0]] = j
+    imgList.append(dataDict)
+    dataDict = {}
