@@ -14,8 +14,7 @@ outDir = filedialog.askdirectory() + '\\'
 csvData = [['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax']]
 files = glob.glob(inDir+"/*.xml")
 for f in tqdm(files, desc = "Gettin' the CSV File out Yo!"):
-    outFile = (f.split("\\")[-1]).split('.')[0] + '.txt'
-    outFile = outDir + outFile
+    outFile = outDir + "csvCompleteFile.csv"
     print(outFile)
     tree = ET.parse(f)
     root = tree.getroot()
@@ -40,4 +39,9 @@ for f in tqdm(files, desc = "Gettin' the CSV File out Yo!"):
 
         labelData.extend([imgName, imgWidth, imgHeight, clsName, xMin, yMin, xMax, yMax])
         csvData.append(labelData)
+
+f = open(outFile, 'w')
+csvWriter = csv.writer(f)
+csvWriter.writerows(csvData)
 pprint.pprint(csvData)
+f.close()
