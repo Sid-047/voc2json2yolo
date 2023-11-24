@@ -17,10 +17,7 @@ csvData = [['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'yma
 files = glob.glob(inDir+"/*.xml")
 dataNum = len(files)
 trainNum = round(dataNum*0.8)
-for f in tqdm(files[:trainNum], desc = "Gettin' the CSV File out Yo!"):
-    outFile = (f.split("\\")[-1]).split('.')[0] + '.txt'
-    outFile = outDir + outFile
-    print(outFile)
+for f in tqdm(files[:trainNum], desc = "Gettin' the trainCSV File out Yo!"):
     tree = ET.parse(f)
     root = tree.getroot()
 
@@ -46,10 +43,7 @@ for f in tqdm(files[:trainNum], desc = "Gettin' the CSV File out Yo!"):
         csvTrainData.append(labelData)
         csvData.append(labelData)
 
-for f in tqdm(files[:trainNum], desc = "Gettin' the CSV File out Yo!"):
-    outFile = (f.split("\\")[-1]).split('.')[0] + '.txt'
-    outFile = outDir + outFile
-    print(outFile)
+for f in tqdm(files[:trainNum], desc = "Gettin' the testCSV File out Yo!"):
     tree = ET.parse(f)
     root = tree.getroot()
 
@@ -74,10 +68,24 @@ for f in tqdm(files[:trainNum], desc = "Gettin' the CSV File out Yo!"):
         labelData.extend([imgName, imgWidth, imgHeight, clsName, xMin, yMin, xMax, yMax])
         csvTrainData.append(labelData)
         csvData.append(labelData)
-pprint.pprint(csvData)
 
+outFile = outDir + 'completeLabels.csv'
 f = open(outFile, 'w')
 csvWriter = csv.writer(f)
 csvWriter.writerows(csvData)
 pprint.pprint(csvData)
+f.close()
+
+outFile = outDir + 'train_labels.csv'
+f = open(outFile, 'w')
+csvWriter = csv.writer(f)
+csvWriter.writerows(csvTrainData)
+pprint.pprint(csvTrainData)
+f.close()
+
+outFile = outDir + 'test_labels.csv'
+f = open(outFile, 'w')
+csvWriter = csv.writer(f)
+csvWriter.writerows(csvTestData)
+pprint.pprint(csvTestData)
 f.close()
