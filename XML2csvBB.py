@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 from colorama import Fore, Style
 from tkinter import filedialog
 from tqdm import tqdm
-import pprint
 import glob
 import csv
 
@@ -59,7 +58,8 @@ for f in tqdm(files[:trainNum], desc = "Gettin' the testCSV File out Yo!"):
     for objectElement in objectElements:
         nameElement = objectElement.find('name')
         clsName = nameElement.text
-        bbxElement = objectElement.find('bndbox')
+
+
         xMin = int(float(bbxElement.find('xmin').text))
         yMin = int(float(bbxElement.find('ymin').text))
         xMax = int(float(bbxElement.find('xmax').text))
@@ -72,20 +72,20 @@ for f in tqdm(files[:trainNum], desc = "Gettin' the testCSV File out Yo!"):
 outFile = outDir + 'completeLabels.csv'
 f = open(outFile, 'w')
 csvWriter = csv.writer(f)
-csvWriter.writerows(csvData)
-pprint.pprint(csvData)
+for row in tqdm(csvData, desc = "Writin' completeLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
 f.close()
 
 outFile = outDir + 'train_labels.csv'
 f = open(outFile, 'w')
 csvWriter = csv.writer(f)
-csvWriter.writerows(csvTrainData)
-pprint.pprint(csvTrainData)
+for row in tqdm(csvTrainData, desc = "Writin' trainLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
 f.close()
 
 outFile = outDir + 'test_labels.csv'
 f = open(outFile, 'w')
 csvWriter = csv.writer(f)
-csvWriter.writerows(csvTestData)
-pprint.pprint(csvTestData)
+for row in tqdm(csvTestData, desc = "Writin' testLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
 f.close()
