@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 from colorama import Fore, Style
 from tkinter import filedialog
 from tqdm import tqdm
-import pandas as pd
 import glob
 import csv
 
@@ -40,8 +39,9 @@ for f in tqdm(files[:trainNum], desc = "Gettin' the trainCSV File out Yo!"):
         yMax = int(float(bbxElement.find('ymax').text))
 
         labelData.extend([imgName, imgWidth, imgHeight, clsName, xMin, yMin, xMax, yMax])
-        csvTrainData.append(labelData)
-        csvData.append(labelData)
+        if labelData not in csvData:
+            csvTrainData.append(labelData)
+            csvData.append(labelData)
 
 for f in tqdm(files[trainNum:], desc = "Gettin' the testCSV File out Yo!"):
     tree = ET.parse(f)
@@ -67,20 +67,27 @@ for f in tqdm(files[trainNum:], desc = "Gettin' the testCSV File out Yo!"):
         yMax = int(float(bbxElement.find('ymax').text))
 
         labelData.extend([imgName, imgWidth, imgHeight, clsName, xMin, yMin, xMax, yMax])
-        csvTrainData.append(labelData)
-        csvData.append(labelData)
+        if labelData not in csvData:
+            csvTestData.append(labelData)
+            csvData.append(labelData)
 
 outFile = outDir + 'completeLabels.csv'
-completeDf = pd.DataFrame(csvData)
-pd.to_csv(outFile, index=False)
-print("completeDataStuff Done Yo !")
+f = open(outFile, 'w')
+csvWriter = csv.writer(f, delimiter=",", lineterminator='\n')
+for row in tqdm(csvData, desc = "Writin' completeLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
+f.close()
 
 outFile = outDir + 'train_labels.csv'
-trainDf = pd.DataFrame(csvTrainData)
-pd.to_csv(outFile, index=False)
-print("trainDataStuff Done Yo !")
+f = open(outFile, 'w')
+csvWriter = csv.writer(f, delimiter=",", lineterminator='\n')
+for row in tqdm(csvTrainData, desc = "Writin' trainLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
+f.close()
 
 outFile = outDir + 'test_labels.csv'
-completeDf = pd.DataFrame(csvTestData)
-pd.to_csv(outFile, index=False)
-print("testDataStuff Done Yo !")
+f = open(outFile, 'w')
+csvWriter = csv.writer(f, delimiter=",", lineterminator='\n')
+for row in tqdm(csvTestData, desc = "Writin' testLabels Yo!", colour = "red"):
+    csvWriter.writerow(row)
+f.close()
