@@ -71,6 +71,10 @@ for f in tqdm(files[trainNum:], desc = "Gettin' the testCSV File out Yo!"):
             csvTestData.append(labelData)
             csvData.append(labelData)
 
+
+csvData = list(set(csvData))
+csvTrainData = list(set(csvTrainData))
+csvTestData = list(set(csvTestData))
 outFile = outDir + 'completeLabels.csv'
 f = open(outFile, 'w')
 csvWriter = csv.writer(f, delimiter=",", lineterminator='\n')
