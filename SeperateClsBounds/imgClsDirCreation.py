@@ -33,8 +33,17 @@ for i in clsList:
 
 c = 0
 for f in tqdm(files, desc = "Flowin' through the Images Yo!", colour = "red"):
-    imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.jpg'
-    imgObj = Image.open(imgFile)
+    try:
+        imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.jpg'
+        imgObj = Image.open(imgFile)
+    except:
+        try:
+            imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.png'
+            imgObj = Image.open(imgFile)
+        except:
+            imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.tiff'
+            imgObj = Image.open(imgFile)
+
     tree = ET.parse(f)
     root = tree.getroot()
     
