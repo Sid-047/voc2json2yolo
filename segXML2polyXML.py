@@ -7,11 +7,16 @@ import glob
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-segXML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut polyXML Directory"+Fore.RESET)
-outDir = filedialog.askdirectory() + '\\'
+outDir = filedialog.askdirectory()
+if "\\" in outDir:
+    outDir = outDir + '\\'
+else:
+    outDir = outDir + '/'
 
 files = glob.glob(inDir+"/*.xml")
 for f in tqdm(files, desc = "Processing Stuff!"):
-    outFile = f.split("\\")[-1]
+    f_ = f.replace("\\", "~").replace("/", "~")
+    outFile = f_.split("~")[-1]
     outFile = outDir + outFile
     print(outFile)
     tree = ET.parse(f)

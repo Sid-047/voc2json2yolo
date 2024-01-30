@@ -9,7 +9,11 @@ inDir = filedialog.askdirectory()
 print(Fore.BLUE+Style.BRIGHT+"\n\nSelect the numClasses Text File Yo!"+Fore.RESET)
 inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut TXT Directory"+Fore.RESET)
-outDir = filedialog.askdirectory() + '\\'
+outDir = filedialog.askdirectory()
+if "\\" in outDir:
+    outDir = outDir + '\\'
+else:
+    outDir = outDir + '/'
 
 f = open(inTxt, 'r')
 clsDict = eval(f.read())
@@ -20,9 +24,9 @@ files = glob.glob(inDir+"/*.xml")
 
 
 for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
-    outFile = (f.split("\\")[-1]).split('.')[0] + '.txt'
+    f_ = f.replace("\\", "~").replace("/", "~")
+    outFile = (f_.split("~")[-1]).split('.')[0] + '.txt'
     outFile = outDir + outFile
-    print(outFile)
     tree = ET.parse(f)
     root = tree.getroot()
 

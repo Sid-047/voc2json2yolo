@@ -10,9 +10,17 @@ import os
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-XML-Content Directory"+Fore.RESET)
 inXmlDir = filedialog.askdirectory()
 print(Fore.BLUE+Style.BRIGHT+"\n\nSelect the in-IMG-Content Directory"+Fore.RESET)
-imgDir = filedialog.askdirectory() + '\\'
+imgDir = filedialog.askdirectory()
+if "\\" in imgDir:
+    outDir = imgDir + '\\'
+else:
+    outDir = imgDir + '/'
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut Directory"+Fore.RESET)
-outDir = filedialog.askdirectory() + '\\'
+outDir = filedialog.askdirectory()
+if "\\" in outDir:
+    outDir = outDir + '\\'
+else:
+    outDir = outDir + '/'
 
 clsSet = set()
 files = glob.glob(inXmlDir+"/*.xml")
@@ -33,15 +41,17 @@ for i in clsList:
 
 c = 0
 for f in tqdm(files, desc = "Flowin' through the Images Yo!", colour = "red"):
+    f_ = f.replace("\\", "~").replace("/", "~")
+    imgName = (f_.split("~")[-1]).split('.')[0]
     try:
-        imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.jpg'
+        imgFile = imgDir + imgName + '.jpg'
         imgObj = Image.open(imgFile)
     except:
         try:
-            imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.png'
+            imgFile = imgDir + imgName + '.png'
             imgObj = Image.open(imgFile)
         except:
-            imgFile = imgDir + (f.split("\\")[-1]).split('.')[0] + '.tiff'
+            imgFile = imgDir + imgName + '.tiff'
             imgObj = Image.open(imgFile)
 
     tree = ET.parse(f)
@@ -59,7 +69,11 @@ for f in tqdm(files, desc = "Flowin' through the Images Yo!", colour = "red"):
         yMax = int(float(bbxElement.find('ymax').text))
         try:
             cropImg = imgObj.crop((xMin, yMin, xMax, yMax))
-            outFolder = outDir + clsName + '\\'
+            outFolder = outDir + clsName
+            if "\\" in outFolder:
+                outDir = outFolder + '\\'
+            else:
+                outDir = outFolder + '/'
             cropImg.save(outFolder + clsName + str(c) + '.jpg')
             c+=1
         except:

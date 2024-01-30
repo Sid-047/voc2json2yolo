@@ -8,7 +8,11 @@ import csv
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-XML-Content Directory"+Fore.RESET)
 inDir = filedialog.askdirectory()
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut CSV Directory"+Fore.RESET)
-outDir = filedialog.askdirectory() + '\\'
+outDir = filedialog.askdirectory()
+if "\\" in outDir:
+    outDir = outDir + '\\'
+else:
+    outDir = outDir + '/'
 
 csvTrainData = [['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax']]
 csvTestData = [['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax']]
