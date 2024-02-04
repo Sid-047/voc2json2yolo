@@ -3,6 +3,7 @@ from colorama import Fore, Style
 from tkinter import filedialog
 from tqdm import tqdm
 import glob
+import cv2
 import os
 
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-TxT-Content Directory"+Fore.RESET)
@@ -29,8 +30,12 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
     f_ = f.replace("\\", "~").replace("/", "~")
     outName = (f_.split("~")[-1]).split('.')[0] + '.xml'
     if os.path.isfile(inImGDir + slashStuff + outName.replace(".xml", ".jpg")) or os.path.isfile(inImGDir + slashStuff + outName.replace(".xml", ".png")):
+        try:
+            img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".jpg"))
+        except:
+            img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".png"))
+        imgSize = img.shape
         outFile = outDir + slashStuff + outName
-        print(outFile)
         txtFile = open(f, 'r')
         txtContents = txtFile.read().split('\n')
         txtFile.close()
@@ -40,5 +45,7 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
         ET.SubElement(root, "filename").text = outName.replace(".xml", ".jpg")
         ET.SubElement(root, "path").text = "..//images//{}".format(outName.replace(".xml", ".jpg"))
         
-        
         sizeElement = ET.SubElement(root, "size")
+        ET.SubElement(sizeElement, "width").text = str(imgSize[0])
+        ET.SubElement(sizeElement, "height").text = str(imgSize[1])
+        ET.SubElement(sizeElement, "depth").text = str(imgSize[2])
