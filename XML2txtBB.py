@@ -65,7 +65,7 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
     f_.write(txtData)
     f_.close()
 
-clsTxt = '\n'.join(list(clsDict.keys()))
+clsTxt = ', '.join(list(clsDict.keys()))
 f = open(outDir+'classes.txt', 'w')
 f.write(clsTxt)
 f.close()
