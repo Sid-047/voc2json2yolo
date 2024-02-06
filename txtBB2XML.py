@@ -7,13 +7,17 @@ import cv2
 import os
 
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-TxT-Content Directory"+Fore.RESET)
-inTxTDir = filedialog.askdirectory()
+#inTxTDir = filedialog.askdirectory()
+inTxTDir = "workin\'Objects\\txtFiles\\boundingBoxAnno\\annotations"
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect LabellediMG-Content Directory"+Fore.RESET)
-inImGDir = filedialog.askdirectory()
+#inImGDir = filedialog.askdirectory()
+inImGDir = "workin\'Objects\\imgFiles"
 print(Fore.BLUE+Style.BRIGHT+"\n\nSelect the numClasses Text File Yo!"+Fore.RESET)
-inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
+#inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
+inTxt = "workin\'Objects\\txtFiles\\boundingBoxAnno\\classes.txt"
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut XML Directory"+Fore.RESET)
-outDir = filedialog.askdirectory()
+#outDir = filedialog.askdirectory()
+outDir = "outFiles\\xmlFiles"
 if "\\" in outDir:
     slashStuff = '\\'
 else:
@@ -22,8 +26,7 @@ else:
 f = open(inTxt, 'r')
 clsNames = f.read().replace(", ", ',').split(',')
 f.close()
-clsDict = dict(zip(clsNames, list(range(len(clsNames)))))
-print(clsDict)
+clsDict = dict(zip(list(range(len(clsNames)), clsNames)))
 
 files = glob.glob(inTxTDir+"/*.txt")
 for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
@@ -34,7 +37,8 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
             img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".jpg"))
         except:
             img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".png"))
-        imgSize = img.shape
+        imgWidth = img.shape[0]
+        imgHeight = img.shape[1]
         outFile = outDir + slashStuff + outName
         txtFile = open(f, 'r')
         txtContents = txtFile.read().split('\n')
@@ -46,6 +50,24 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
         ET.SubElement(root, "path").text = "..//images//{}".format(outName.replace(".xml", ".jpg"))
         
         sizeElement = ET.SubElement(root, "size")
-        ET.SubElement(sizeElement, "width").text = str(imgSize[0])
-        ET.SubElement(sizeElement, "height").text = str(imgSize[1])
-        ET.SubElement(sizeElement, "depth").text = str(imgSize[2])
+        ET.SubElement(sizeElement, "width").text = str(imgWidth)
+        ET.SubElement(sizeElement, "height").text = str(imgHeight)
+        ET.SubElement(sizeElement, "depth").text = '3'
+        
+        for i in txtContents:
+            annoData = [eval(x) for x in i.split()]
+            print(annoData)
+            objectElement = ET.SubElement(root, "object")
+            ET.SubElement(objectElement, "name").text = clsDict[annoData[0]]
+            
+            xCen = annoData[1]
+            yCen = annoData[2]
+            clsWidth = annoData[3]
+            clsHeight = annoData[4]
+            xUnits = clsWidth * imgWidth
+            yUnits = clsHeight * imgHeight
+            xMin = (xCen * imgWidth * 2) - xUnits
+            yMin = (yCen * imgHeight * 2) - yUnits
+            xMax = xMin + xUnits
+            yMax = yMin + yUnits
+            bBoxElement = ET.SubElement(objectElement, "bndbox")
