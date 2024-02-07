@@ -7,17 +7,13 @@ import cv2
 import os
 
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect in-TxT-Content Directory"+Fore.RESET)
-#inTxTDir = filedialog.askdirectory()
-inTxTDir = "workin\'Objects\\txtFiles\\boundingBoxAnno\\annotations"
+inTxTDir = filedialog.askdirectory()
 print(Fore.YELLOW+Style.BRIGHT+"\n\nSelect LabellediMG-Content Directory"+Fore.RESET)
-#inImGDir = filedialog.askdirectory()
-inImGDir = "workin\'Objects\\imgFiles"
+inImGDir = filedialog.askdirectory()
 print(Fore.BLUE+Style.BRIGHT+"\n\nSelect the numClasses Text File Yo!"+Fore.RESET)
-#inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
-inTxt = "workin\'Objects\\txtFiles\\boundingBoxAnno\\classes.txt"
+inTxt = filedialog.askopenfilename(filetypes=[("NumClass TextFile", "*.txt")])
 print(Fore.CYAN+Style.BRIGHT+"\n\nand Come On! Select outPut XML Directory"+Fore.RESET)
-#outDir = filedialog.askdirectory()
-outDir = "outFiles\\xmlFiles"
+outDir = filedialog.askdirectory()
 if "\\" in outDir:
     slashStuff = '\\'
 else:
@@ -26,7 +22,7 @@ else:
 f = open(inTxt, 'r')
 clsNames = f.read().replace(", ", ',').split(',')
 f.close()
-clsDict = dict(zip(list(range(len(clsNames)), clsNames)))
+clsDict = dict(zip(list(range(len(clsNames))), clsNames))
 
 files = glob.glob(inTxTDir+"/*.txt")
 for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
@@ -37,8 +33,8 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
             img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".jpg"))
         except:
             img = cv2.imread(inImGDir + slashStuff + outName.replace(".xml", ".png"))
-        imgWidth = img.shape[0]
-        imgHeight = img.shape[1]
+        imgWidth = img.shape[1]
+        imgHeight = img.shape[0]
         outFile = outDir + slashStuff + outName
         txtFile = open(f, 'r')
         txtContents = txtFile.read().split('\n')
@@ -56,7 +52,6 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
         
         for i in txtContents:
             annoData = [eval(x) for x in i.split()]
-            print(annoData)
             objectElement = ET.SubElement(root, "object")
             ET.SubElement(objectElement, "name").text = clsDict[annoData[0]]
             
@@ -66,8 +61,15 @@ for f in tqdm(files, desc = "Gettin' the Txt File out Yo!"):
             clsHeight = annoData[4]
             xUnits = clsWidth * imgWidth
             yUnits = clsHeight * imgHeight
-            xMin = (xCen * imgWidth * 2) - xUnits
-            yMin = (yCen * imgHeight * 2) - yUnits
+            xMin = ((xCen * imgWidth * 2) - xUnits) / 2
+            yMin = ((yCen * imgHeight * 2) - yUnits) / 2
             xMax = xMin + xUnits
             yMax = yMin + yUnits
             bBoxElement = ET.SubElement(objectElement, "bndbox")
+            ET.SubElement(bBoxElement, "xmin").text = str(xMin)
+            ET.SubElement(bBoxElement, "ymin").text = str(yMin)
+            ET.SubElement(bBoxElement, "xmax").text = str(xMax)
+            ET.SubElement(bBoxElement, "ymax").text = str(yMax)
+        tree = ET.ElementTree(root)
+        ET.indent(tree, space="\t", level=0)
+        tree.write(outFile, encoding='utf-8')   
